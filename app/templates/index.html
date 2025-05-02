@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sheep Counter System</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Sheep Counter System</h1>
+        
+        <div class="mode-selector">
+            <button class="mode-btn active" data-mode="image">Image Mode</button>
+            <button class="mode-btn" data-mode="video">Video Mode</button>
+        </div>
+        
+        <!-- Image Upload Section -->
+        <div class="upload-section image-mode">
+            <h2>Upload Image</h2>
+            <form id="imageForm" enctype="multipart/form-data">
+                <input type="file" id="imageInput" name="file" accept="image/*" required>
+                <button type="submit">Process Image</button>
+            </form>
+        </div>
+        
+        <!-- Video Upload Section -->
+        <div class="upload-section video-mode" style="display:none;">
+            <h2>Upload Video</h2>
+            <form id="videoForm" enctype="multipart/form-data">
+                <input type="file" id="videoInput" name="file" accept="video/*" required>
+                <button type="submit">Process Video</button>
+            </form>
+        </div>
+        
+        <div class="results-section">
+            <h2>Results</h2>
+            <div class="media-container">
+                <!-- For Images/Video Frames -->
+                <div class="media-box">
+                    <h3>Original</h3>
+                    <div id="originalMedia">
+                        <img id="originalImage" src="" alt="Original Image" style="display:none;">
+                        <video id="originalVideo" controls style="display:none;"></video>
+                    </div>
+                </div>
+                <div class="media-box">
+                    <h3>Processed</h3>
+                    <div id="processedMedia">
+                        <img id="processedImage" src="" alt="Processed Image" style="display:none;">
+                        <video id="processedVideo" controls style="display:none;"></video>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Stats Section -->
+            <div class="stats">
+                <h3>Detection Statistics</h3>
+                <div class="stats-grid">
+                    <div>
+                        <p><strong>Sheep Count:</strong> <span id="sheepCount">0</span></p>
+                        <p><strong>Processing Time:</strong> <span id="processingTime">0</span> seconds</p>
+                    </div>
+                    <div id="videoStats" style="display:none;">
+                        <p><strong>Total Frames:</strong> <span id="totalFrames">0</span></p>
+                        <p><strong>Average Count:</strong> <span id="averageCount">0</span></p>
+                        <p><strong>Min Count:</strong> <span id="minCount">0</span></p>
+                        <p><strong>Max Count:</strong> <span id="maxCount">0</span></p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Video Timeline -->
+            <div id="videoTimeline" class="timeline" style="display:none;">
+                <h3>Sheep Count Over Time</h3>
+                <canvas id="timelineChart" width="800" height="200"></canvas>
+            </div>
+        </div>
+        
+        <div class="history-section">
+            <h2>History</h2>
+            <div class="actions">
+                <a href="/history" class="btn">View Full History</a>
+                <a href="/report" class="btn">Download PDF Report</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Mode switching
+        document.querySelectorAll('.mode-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                
+                document.querySelectorAll('.upload-section').forEach(section => {
+                    section.style.display = 'none';
+                });
+                
+                document.querySelector(`.${this.dataset.mode}-mode`).style.display = 'block';
+                
+                // Reset results display when switching modes
+                resetResultsDisplay();
+            });
+        });
+        
+        // Image processing
+        document.getElementById('imageForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            processMedia('image');
+        });
+        
+        // Video processing
+        document.getElementById('videoForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            processMedia('video');
+        });
+        
+        async function processMedia(type) {
+            const formData = new FormData();
+            let endpoint = '/detect';
+            
+            if (type === 'image') {
+                formData.append('file', document.getElementById('imageInput').files[0]);
+            } else if (type === 'video') {
+                formData.append('file', document.getElementById('videoInput').files[0]);
+            }
+            
+            try {
+                showLoader();
+                
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    displayResults(data, type);
+                } else {
+                    alert(`Error: ${data.message}`);
+                }
+            } catch (error) {
+                alert('An error occurred while processing');
+                console.error(error);
+            } finally {
+                hideLoader();
+            }
+        }
+
+        function displayResults(data, mediaType) {
+            // Reset displays
+            document.getElementById('originalImage').style.display = 'none';
+            document.getElementById('originalVideo').style.display = 'none';
+            document.getElementById('processedImage').style.display = 'none';
+            document.getElementById('processedVideo').style.display = 'none';
+            document.getElementById('videoStats').style.display = 'none';
+            document.getElementById('videoTimeline').style.display = 'none';
+            
+            if (mediaType === 'image') {
+                // Show original and processed images
+                const originalImg = document.getElementById('originalImage');
+                originalImg.src = `/static/uploads/${data.original}`;
+                originalImg.style.display = 'block';
+                
+                const processedImg = document.getElementById('processedImage');
+                processedImg.src = `/static/results/${data.processed}`;
+                processedImg.style.display = 'block';
+                
+            } else if (mediaType === 'video') {
+                // Show video controls
+                const originalVideo = document.getElementById('originalVideo');
+                originalVideo.src = `/static/uploads/${data.original}`;
+                originalVideo.style.display = 'block';
+                
+                const processedVideo = document.getElementById('processedVideo');
+                processedVideo.src = `/static/results/${data.processed}`;
+                processedVideo.style.display = 'block';
+                
+                // Show video stats
+                document.getElementById('videoStats').style.display = 'block';
+                document.getElementById('totalFrames').textContent = data.total_frames;
+                document.getElementById('averageCount').textContent = data.count;
+                document.getElementById('minCount').textContent = data.min_count;
+                document.getElementById('maxCount').textContent = data.max_count;
+                
+                // Show timeline if we have frame-by-frame data
+                if (data.frame_stats) {
+                    document.getElementById('videoTimeline').style.display = 'block';
+                    renderTimelineChart(data.frame_stats);
+                }
+            }
+            
+            // Update common stats
+            document.getElementById('sheepCount').textContent = data.count;
+            document.getElementById('processingTime').textContent = data.processing_time;
+        }
+        
+        function resetResultsDisplay() {
+            document.getElementById('originalImage').style.display = 'none';
+            document.getElementById('originalVideo').style.display = 'none';
+            document.getElementById('processedImage').style.display = 'none';
+            document.getElementById('processedVideo').style.display = 'none';
+            document.getElementById('videoStats').style.display = 'none';
+            document.getElementById('videoTimeline').style.display = 'none';
+        }
+        
+        function renderTimelineChart(frameStats) {
+            const ctx = document.getElementById('timelineChart').getContext('2d');
+            
+            // Extract data for chart
+            const labels = frameStats.map(stat => stat[0]); // Frame numbers
+            const counts = frameStats.map(stat => stat[1]); // Sheep counts
+            
+            new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Sheep Count',
+                        data: counts,
+                        borderColor: 'rgb(75, 192, 192)',
+                        tension: 0.1,
+                        fill: false
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Sheep Count'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Frame Number'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        function showLoader() {
+            // Implement loading indicator
+        }
+        
+        function hideLoader() {
+            // Hide loading indicator
+        }
+    </script>
+</body>
+</html>

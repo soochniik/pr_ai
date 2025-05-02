@@ -1,0 +1,222 @@
+:root {
+    --primary-color: #92B7FE;
+    --primary-dark: #6A9AFE;
+    --text-color: #2c3e50;
+    --light-bg: #f8fafc;
+    --border-color: #e2e8f0;
+    --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --radius: 8px;
+  }
+  
+  body {
+    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    line-height: 1.5;
+    color: var(--text-color);
+    background-color: #f1f5f9;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+  }
+  
+  h1, h2, h3 {
+    color: var(--text-color);
+    font-weight: 600;
+    margin-top: 0;
+  }
+  
+  h1 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    color: var(--primary-dark);
+  }
+  
+  h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+  
+  h3 {
+    font-size: 1.25rem;
+    margin-bottom: 0.75rem;
+  }
+  
+  /* Upload Sections */
+  .mode-selector {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+    justify-content: center;
+  }
+  
+  .upload-section {
+    background: var(--light-bg);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    border: 1px solid var(--border-color);
+  }
+  
+  /* Buttons & Interactive Elements */
+  .btn, button, .mode-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--primary-color);
+    color: white;
+    padding: 0.625rem 1.25rem;
+    border: none;
+    border-radius: var(--radius);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: var(--shadow-sm);
+  }
+  
+  .btn:hover, button:hover {
+    background: var(--primary-dark);
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-md);
+  }
+  
+  .mode-btn {
+    background: white;
+    color: var(--text-color);
+    border: 1px solid var(--border-color);
+  }
+  
+  .mode-btn.active {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+  }
+  
+  /* Media Containers */
+  .media-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin: 1.5rem 0;
+  }
+  
+  .media-box {
+    background: white;
+    padding: 1rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+  }
+  
+  .media-box h3 {
+    margin-top: 0;
+    color: var(--primary-dark);
+  }
+  
+  .media-container img,
+  .media-container video {
+    width: 100%;
+    height: auto;
+    max-height: 400px;
+    object-fit: contain;
+    border-radius: 4px;
+    display: none;
+    background: var(--light-bg);
+  }
+  
+  /* Stats Section */
+  .stats {
+    background: white;
+    padding: 1.5rem;
+    border-radius: var(--radius);
+    margin-top: 1.5rem;
+    border: 1px solid var(--border-color);
+  }
+  
+  .stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+  }
+  
+  .stats p {
+    margin: 0.5rem 0;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .stats p strong {
+    color: var(--primary-dark);
+  }
+  
+  /* Timeline */
+  .timeline {
+    background: white;
+    padding: 1.5rem;
+    border-radius: var(--radius);
+    margin-top: 1.5rem;
+    border: 1px solid var(--border-color);
+  }
+  
+  /* History Table */
+  .history-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1.5rem;
+    font-size: 0.9rem;
+  }
+  
+  .history-table th {
+    background: var(--primary-color);
+    color: white;
+    padding: 0.75rem;
+    text-align: left;
+  }
+  
+  .history-table td {
+    padding: 0.75rem;
+    border-bottom: 1px solid var(--border-color);
+  }
+  
+  .history-table tr:nth-child(even) {
+    background: var(--light-bg);
+  }
+  
+  .history-table tr:hover {
+    background: rgba(146, 183, 254, 0.1);
+  }
+  
+  /* Forms */
+  input[type="file"] {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    margin: 0.5rem 0 1rem;
+    background: white;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .container {
+      padding: 1rem;
+      margin: 1rem;
+    }
+    
+    .media-container {
+      grid-template-columns: 1fr;
+    }
+    
+    .mode-selector {
+      flex-direction: column;
+    }
+  }
+  

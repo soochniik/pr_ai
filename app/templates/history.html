@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detection History</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Detection History</h1>
+        <a href="/" class="btn">Back to Home</a>
+        
+        <table class="history-table">
+            <thead>
+                <tr>
+                    <th>Timestamp</th>
+                    <th>Original Image/Video</th>
+                    <th>Processed Image/Video</th>
+                    <th>Sheep Count</th>
+                    <th>Processing Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in history %}
+                <tr>
+                    <td>{{ item.timestamp }}</td>
+                    <td><a href="/static/uploads/{{ item.original_image }}" target="_blank">View</a></td>
+                    <td><a href="/static/results/{{ item.processed_image }}" target="_blank">View</a></td>
+                    <td>{{ item.sheep_count }}</td>
+                    <td>{{ "%.2f"|format(item.processing_time) }}s</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
