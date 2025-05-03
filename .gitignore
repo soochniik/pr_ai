@@ -21,6 +21,7 @@ venv
 yolov8n.pt
 uploads/
 results/
+reports/
 
 # vim temporary files
 *~

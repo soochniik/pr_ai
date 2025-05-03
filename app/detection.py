@@ -44,6 +44,12 @@ def detect_objects(image_path: str, is_video: bool = False) -> DetectionResult:
         plotted_img = results[0].plot()
         plotted_img_rgb = cv2.cvtColor(plotted_img, cv2.COLOR_BGR2RGB)
         pil_img = Image.fromarray(plotted_img_rgb)
+
+        # Сохранение обработанного изображения
+        result_filename = f"result_{os.path.basename(image_path)}"
+        result_path = f"static/results/{result_filename}"
+        os.makedirs(os.path.dirname(result_path), exist_ok=True)
+        pil_img.save(result_path, quality=95)
         
         processing_time = time.time() - start_time
         
