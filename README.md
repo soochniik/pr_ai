@@ -20,7 +20,7 @@
 - **Backend**: FastAPI (Python)
 - **Computer Vision**: YOLOv8 (Ultralytics), OpenCV
 - **Frontend**: HTML5, CSS, JavaScript
-- **База данных**: SQLALCHEMY
+- **База данных**: SQLite (SQLAlchemy)
 
 ## 📊 Пример работы
 
