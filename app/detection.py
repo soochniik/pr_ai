@@ -13,7 +13,7 @@ class DetectionResult(NamedTuple):
     frame_stats: List[Tuple[int, int, float]] = None  # для построения графика зависимости количества объектов от кадров
     min_count: int = 0  # минимальное количество овец в кадре
     max_count: int = 0  # максимальное количество овец в кадре
-    total_frames: int = 0   # общее количество овец в видео
+    total_frames: int = 0   # общее количество кадров в видео
 
 # Загрузка модели
 model = YOLO('yolov8n.pt')
