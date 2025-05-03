@@ -1,5 +1,5 @@
 import os
-from fastapi import FastAPI, Request, UploadFile, File, Form
+from fastapi import FastAPI, Request, UploadFile, File
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse, JSONResponse, FileResponse
@@ -16,36 +16,32 @@ app = FastAPI(title="Sheep Counter System")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="app/templates")
 
-# Создание директорий
+# Создание директорий для хранения загруженных и детектированных фото- видео-файлов
 Path("static/uploads").mkdir(parents=True, exist_ok=True)
 Path("static/results").mkdir(parents=True, exist_ok=True)
 
+# Метод получения главной страницы сервиса
 @app.get("/", response_class=HTMLResponse)
 async def read_root(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
+# Метод детектирования файла после нажатия на кнопку Process
 @app.post("/detect")
 async def detect(file: UploadFile = File(...)):
     try:
-        # Генерация уникального имени файла
         file_ext = file.filename.split(".")[-1]
         filename = f"{uuid.uuid4()}.{file_ext}"
         file_path = f"static/uploads/{filename}"
-        
-        # Сохранение файла
+
         with open(file_path, "wb") as buffer:
             buffer.write(await file.read())
-        
-        # Проверка типа файла
+
         is_video = file_ext.lower() in ['mp4', 'avi', 'mov', 'mkv']
-        
-        # Обработка файла
+
         result = detect_objects(file_path, is_video=is_video)
-        
-        # Сохранение результата
+
         result_filename = f"result_{os.path.splitext(filename)[0]}.mp4" if is_video else f"result_{filename}"
-        
-        # Сохранение в историю
+
         detection_result = DetectionResult(
             original_image=filename,
             processed_image=result_filename,
@@ -75,6 +71,7 @@ async def detect(file: UploadFile = File(...)):
     except Exception as e:
         return JSONResponse({"status": "error", "message": str(e)}, status_code=500)
 
+# Метод перехода на страницу История запросов после нажатия на кнопку View full history
 @app.get("/history")
 async def history(request: Request):
     history_data = get_history()
@@ -83,6 +80,7 @@ async def history(request: Request):
         {"request": request, "history": history_data}
     )
 
+# Метод создания pdf-отчета после нажатия на кнопку 
 @app.get("/report")
 async def generate_report_endpoint():
     report_path = generate_report()

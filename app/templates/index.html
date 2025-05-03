@@ -15,7 +15,6 @@
             <button class="mode-btn" data-mode="video">Video Mode</button>
         </div>
         
-        <!-- Image Upload Section -->
         <div class="upload-section image-mode">
             <h2>Upload Image</h2>
             <form id="imageForm" enctype="multipart/form-data">
@@ -23,8 +22,7 @@
                 <button type="submit">Process Image</button>
             </form>
         </div>
-        
-        <!-- Video Upload Section -->
+
         <div class="upload-section video-mode" style="display:none;">
             <h2>Upload Video</h2>
             <form id="videoForm" enctype="multipart/form-data">
@@ -36,7 +34,6 @@
         <div class="results-section">
             <h2>Results</h2>
             <div class="media-container">
-                <!-- For Images/Video Frames -->
                 <div class="media-box">
                     <h3>Original</h3>
                     <div id="originalMedia">
@@ -52,8 +49,7 @@
                     </div>
                 </div>
             </div>
-            
-            <!-- Stats Section -->
+
             <div class="stats">
                 <h3>Detection Statistics</h3>
                 <div class="stats-grid">
@@ -69,8 +65,7 @@
                     </div>
                 </div>
             </div>
-            
-            <!-- Video Timeline -->
+
             <div id="videoTimeline" class="timeline" style="display:none;">
                 <h3>Sheep Count Over Time</h3>
                 <canvas id="timelineChart" width="800" height="200"></canvas>
@@ -88,7 +83,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
-        // Mode switching
+        // Обработка переключения между Image Mode и Video Mode
         document.querySelectorAll('.mode-btn').forEach(btn => {
             btn.addEventListener('click', function() {
                 document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
@@ -99,19 +94,18 @@
                 });
                 
                 document.querySelector(`.${this.dataset.mode}-mode`).style.display = 'block';
-                
-                // Reset results display when switching modes
+
                 resetResultsDisplay();
             });
         });
         
-        // Image processing
+        // Загрузка изображения
         document.getElementById('imageForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             processMedia('image');
         });
         
-        // Video processing
+        // Загрузка видео
         document.getElementById('videoForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             processMedia('video');
@@ -151,7 +145,6 @@
         }
 
         function displayResults(data, mediaType) {
-            // Reset displays
             document.getElementById('originalImage').style.display = 'none';
             document.getElementById('originalVideo').style.display = 'none';
             document.getElementById('processedImage').style.display = 'none';
@@ -160,7 +153,7 @@
             document.getElementById('videoTimeline').style.display = 'none';
             
             if (mediaType === 'image') {
-                // Show original and processed images
+                // Показ загруженного и детектированного изображения
                 const originalImg = document.getElementById('originalImage');
                 originalImg.src = `/static/uploads/${data.original}`;
                 originalImg.style.display = 'block';
@@ -170,7 +163,7 @@
                 processedImg.style.display = 'block';
                 
             } else if (mediaType === 'video') {
-                // Show video controls
+                // Показ загруженного и детектированного видео
                 const originalVideo = document.getElementById('originalVideo');
                 originalVideo.src = `/static/uploads/${data.original}`;
                 originalVideo.style.display = 'block';
@@ -179,21 +172,20 @@
                 processedVideo.src = `/static/results/${data.processed}`;
                 processedVideo.style.display = 'block';
                 
-                // Show video stats
+                // Показ видео-статистики
                 document.getElementById('videoStats').style.display = 'block';
                 document.getElementById('totalFrames').textContent = data.total_frames;
                 document.getElementById('averageCount').textContent = data.count;
                 document.getElementById('minCount').textContent = data.min_count;
                 document.getElementById('maxCount').textContent = data.max_count;
-                
-                // Show timeline if we have frame-by-frame data
+
+                // Построение графика зависимости
                 if (data.frame_stats) {
                     document.getElementById('videoTimeline').style.display = 'block';
                     renderTimelineChart(data.frame_stats);
                 }
             }
-            
-            // Update common stats
+
             document.getElementById('sheepCount').textContent = data.count;
             document.getElementById('processingTime').textContent = data.processing_time;
         }
@@ -207,10 +199,10 @@
             document.getElementById('videoTimeline').style.display = 'none';
         }
         
+        // Функция для построения графика зависимости
         function renderTimelineChart(frameStats) {
             const ctx = document.getElementById('timelineChart').getContext('2d');
-            
-            // Extract data for chart
+
             const labels = frameStats.map(stat => stat[0]); // Frame numbers
             const counts = frameStats.map(stat => stat[1]); // Sheep counts
             
@@ -221,7 +213,7 @@
                     datasets: [{
                         label: 'Sheep Count',
                         data: counts,
-                        borderColor: 'rgb(75, 192, 192)',
+                        borderColor: 'rgb(146, 183, 254)',
                         tension: 0.1,
                         fill: false
                     }]
@@ -247,11 +239,11 @@
             });
         }
         function showLoader() {
-            // Implement loading indicator
+
         }
         
         function hideLoader() {
-            // Hide loading indicator
+
         }
     </script>
 </body>

@@ -66,7 +66,7 @@ def generate_report():
             f"{item.processing_time:.2f}s"
         ])
     
-    # Генерация отчета
+    # Генерация pdf-отчета
     report_dir = "static/reports"
     os.makedirs(report_dir, exist_ok=True)
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")

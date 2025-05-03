@@ -19,6 +19,8 @@ docs_build
 site_build
 venv
 yolov8n.pt
+uploads/
+results/
 
 # vim temporary files
 *~

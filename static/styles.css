@@ -65,8 +65,7 @@
     margin-bottom: 2rem;
     border: 1px solid var(--border-color);
   }
-  
-  /* Buttons & Interactive Elements */
+ 
   .btn, button, .mode-btn {
     display: inline-flex;
     align-items: center;
@@ -99,8 +98,7 @@
     color: white;
     border-color: var(--primary-color);
   }
-  
-  /* Media Containers */
+
   .media-container {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -131,8 +129,7 @@
     display: none;
     background: var(--light-bg);
   }
-  
-  /* Stats Section */
+ 
   .stats {
     background: white;
     padding: 1.5rem;
@@ -157,7 +154,6 @@
     color: var(--primary-dark);
   }
   
-  /* Timeline */
   .timeline {
     background: white;
     padding: 1.5rem;
@@ -165,8 +161,7 @@
     margin-top: 1.5rem;
     border: 1px solid var(--border-color);
   }
-  
-  /* History Table */
+
   .history-table {
     width: 100%;
     border-collapse: collapse;
@@ -194,7 +189,6 @@
     background: rgba(146, 183, 254, 0.1);
   }
   
-  /* Forms */
   input[type="file"] {
     width: 100%;
     padding: 0.5rem;
@@ -203,8 +197,7 @@
     margin: 0.5rem 0 1rem;
     background: white;
   }
-  
-  /* Responsive */
+ 
   @media (max-width: 768px) {
     .container {
       padding: 1rem;
