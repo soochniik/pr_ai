@@ -10,7 +10,7 @@ from .detection import detect_objects
 from .database import save_to_history, get_history, generate_report
 from .models import DetectionResult
 
-app = FastAPI(title="Sheep Counter System")
+app = FastAPI(title="Luggage Counter System")
 
 # Настройка статических файлов и шаблонов
 app.mount("/static", StaticFiles(directory="static"), name="static")
@@ -45,7 +45,7 @@ async def detect(file: UploadFile = File(...)):
         detection_result = DetectionResult(
             original_image=filename,
             processed_image=result_filename,
-            sheep_count=result.count,
+            luggage_count=result.count,
             processing_time=result.processing_time
         )
         save_to_history(detection_result)
@@ -91,4 +91,3 @@ async def generate_report_endpoint():
             filename=os.path.basename(report_path)
         )
     return JSONResponse({"status": "error", "message": "Report generation failed"})
-    

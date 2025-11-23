@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sheep Counter System</title>
+    <title>Luggage Counter System</title>
     <link rel="stylesheet" href="/static/styles.css">
 </head>
 <body>
     <div class="container">
-        <h1>Sheep Counter System</h1>
+        <h1>Luggage Counter System</h1>
         
         <div class="mode-selector">
             <button class="mode-btn active" data-mode="image">Image Mode</button>
@@ -54,7 +54,7 @@
                 <h3>Detection Statistics</h3>
                 <div class="stats-grid">
                     <div>
-                        <p><strong>Sheep Count:</strong> <span id="sheepCount">0</span></p>
+                        <p><strong>Luggage Count:</strong> <span id="luggageCount">0</span></p>
                         <p><strong>Processing Time:</strong> <span id="processingTime">0</span> seconds</p>
                     </div>
                     <div id="videoStats" style="display:none;">
@@ -67,7 +67,7 @@
             </div>
 
             <div id="videoTimeline" class="timeline" style="display:none;">
-                <h3>Sheep Count Over Time</h3>
+                <h3>Luggage Count Over Time</h3>
                 <canvas id="timelineChart" width="800" height="200"></canvas>
             </div>
         </div>
@@ -186,7 +186,7 @@
                 }
             }
 
-            document.getElementById('sheepCount').textContent = data.count;
+            document.getElementById('luggageCount').textContent = data.count;
             document.getElementById('processingTime').textContent = data.processing_time;
         }
         
@@ -204,14 +204,14 @@
             const ctx = document.getElementById('timelineChart').getContext('2d');
 
             const labels = frameStats.map(stat => stat[0]); // Frame numbers
-            const counts = frameStats.map(stat => stat[1]); // Sheep counts
+            const counts = frameStats.map(stat => stat[1]); // Luggage counts
             
             new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: labels,
                     datasets: [{
-                        label: 'Sheep Count',
+                        label: 'Luggage Count',
                         data: counts,
                         borderColor: 'rgb(146, 183, 254)',
                         tension: 0.1,
@@ -225,7 +225,7 @@
                             beginAtZero: true,
                             title: {
                                 display: true,
-                                text: 'Sheep Count'
+                                text: 'Luggage Count'
                             }
                         },
                         x: {

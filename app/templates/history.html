@@ -17,7 +17,7 @@
                     <th>Timestamp</th>
                     <th>Original Image/Video</th>
                     <th>Processed Image/Video</th>
-                    <th>Sheep Count</th>
+                    <th>Luggage Count</th>
                     <th>Processing Time</th>
                 </tr>
             </thead>
@@ -27,7 +27,7 @@
                     <td>{{ item.timestamp }}</td>
                     <td><a href="/static/uploads/{{ item.original_image }}" target="_blank">View</a></td>
                     <td><a href="/static/results/{{ item.processed_image }}" target="_blank">View</a></td>
-                    <td>{{ item.sheep_count }}</td>
+                    <td>{{ item.luggage_count }}</td>
                     <td>{{ "%.2f"|format(item.processing_time) }}s</td>
                 </tr>
                 {% endfor %}

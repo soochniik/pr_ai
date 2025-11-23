@@ -5,7 +5,7 @@ from datetime import datetime
 class DetectionResult(BaseModel):
     original_image: str
     processed_image: str
-    sheep_count: int
+    luggage_count: int
     processing_time: float
 
 class DetectionInput(BaseModel):

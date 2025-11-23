@@ -9,7 +9,7 @@ from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph
 from reportlab.lib.styles import getSampleStyleSheet
 import os
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///./sheep_counter.db"
+SQLALCHEMY_DATABASE_URL = "sqlite:///./luggage_counter.db"
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -23,7 +23,7 @@ class DetectionHistory(Base):
     timestamp = Column(DateTime, default=datetime.utcnow)
     original_image = Column(String)
     processed_image = Column(String)
-    sheep_count = Column(Integer)
+    luggage_count = Column(Integer)
     processing_time = Column(Float)
 
 Base.metadata.create_all(bind=engine)
@@ -34,7 +34,7 @@ def save_to_history(result: DetectionResult):
         db_item = DetectionHistory(
             original_image=result.original_image,
             processed_image=result.processed_image,
-            sheep_count=result.sheep_count,
+            luggage_count=result.luggage_count,
             processing_time=result.processing_time
         )
         db.add(db_item)
@@ -62,7 +62,7 @@ def generate_report():
             item.timestamp.strftime("%Y-%m-%d %H:%M:%S"),
             item.original_image,
             item.processed_image,
-            item.sheep_count,
+            item.luggage_count,
             f"{item.processing_time:.2f}s"
         ])
     
@@ -71,12 +71,12 @@ def generate_report():
     os.makedirs(report_dir, exist_ok=True)
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
-    filename = f"{report_dir}/sheep_report_{timestamp}.pdf"
+    filename = f"{report_dir}/luggage_report_{timestamp}.pdf"
     doc = SimpleDocTemplate(filename, pagesize=landscape(letter))
     styles = getSampleStyleSheet()
     
     elements = []
-    elements.append(Paragraph("Sheep Detection Report", styles["Title"]))
+    elements.append(Paragraph("Luggage Detection Report", styles["Title"]))
     
     # Создание таблицы
     table_data = [["Timestamp", "Original", "Processed", "Count", "Time"]] + data

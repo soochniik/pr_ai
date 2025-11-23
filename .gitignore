@@ -10,7 +10,7 @@ site
 .coverage*
 coverage.xml
 .netlify
-sheep_counter.db
+luggage_counter.db
 log.txt
 Pipfile.lock
 env3.*

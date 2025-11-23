@@ -8,11 +8,11 @@ import numpy as np
 
 class DetectionResult(NamedTuple):
     image: Image.Image
-    count: int  # количество овец на изображении или среднее количество овец в кадре
+    count: int  # количество багажа на изображении или среднее количество багажа в кадре
     processing_time: float  # время обработки медиа файла
     frame_stats: List[Tuple[int, int, float]] = None  # для построения графика зависимости количества объектов от кадров
-    min_count: int = 0  # минимальное количество овец в кадре
-    max_count: int = 0  # максимальное количество овец в кадре
+    min_count: int = 0  # минимальное количество багажа в кадре
+    max_count: int = 0  # максимальное количество багажа в кадре
     total_frames: int = 0   # общее количество кадров в видео
 
 # Загрузка модели
@@ -32,14 +32,14 @@ def detect_objects(image_path: str, is_video: bool = False) -> DetectionResult:
         # Детекция объектов
         results = model(img_rgb)
         
-        # Подсчет овец
-        sheep_classes = ['sheep']
-        sheep_count = 0
+        # Подсчет багажа
+        luggage_classes = ['suitcase', 'handbag', 'backpack']
+        luggage_count = 0
         for result in results:
             for box in result.boxes:
                 class_name = model.names[int(box.cls)]
-                if class_name in sheep_classes:
-                    sheep_count += 1
+                if class_name in luggage_classes:
+                    luggage_count += 1
         
         plotted_img = results[0].plot()
         plotted_img_rgb = cv2.cvtColor(plotted_img, cv2.COLOR_BGR2RGB)
@@ -55,7 +55,7 @@ def detect_objects(image_path: str, is_video: bool = False) -> DetectionResult:
         
         return DetectionResult(
             image=pil_img,
-            count=sheep_count,
+            count=luggage_count,
             processing_time=round(processing_time, 2)
         )
     
@@ -104,15 +104,15 @@ def detect_objects(image_path: str, is_video: bool = False) -> DetectionResult:
             # Детекция объектов
             results = model(frame)
             
-            # Подсчет овец
-            sheep_count = 0
+            # Подсчет багажа
+            luggage_count = 0
             for result in results:
                 for box in result.boxes:
                     class_name = model.names[int(box.cls)]
-                    if class_name == 'sheep':
-                        sheep_count += 1
+                    if class_name in ['suitcase', 'handbag', 'backpack']:
+                        luggage_count += 1
             
-            counts.append(sheep_count)
+            counts.append(luggage_count)
             
             # Визуализация
             plotted_frame = results[0].plot()
@@ -121,7 +121,7 @@ def detect_objects(image_path: str, is_video: bool = False) -> DetectionResult:
             plotted_frame_rgb = cv2.cvtColor(plotted_frame, cv2.COLOR_BGR2RGB)
             out.write(plotted_frame_rgb)
             
-            frame_stats.append((frame_count, sheep_count, time.time() - frame_start))
+            frame_stats.append((frame_count, luggage_count, time.time() - frame_start))
 
             if frame_count % 10 == 0:
                 processed_frames.append(plotted_frame_rgb)
@@ -145,7 +145,7 @@ def detect_objects(image_path: str, is_video: bool = False) -> DetectionResult:
         
         return DetectionResult(
             image=last_frame,
-            count=avg_count,
+            count=max_count,
             processing_time=round(processing_time, 2),
             frame_stats=frame_stats,
             min_count=min_count,
